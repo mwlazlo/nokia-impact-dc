@@ -1,0 +1,7 @@
+{
+  "ImpactUsername": "ubiik",
+  "ImpactPassword": "ubiik123",
+  "CallbackUsername": "nokia",
+  "CallbackPassword": "nokia123",
+  "CallbackHost": "http://localhost:8080"
+}
