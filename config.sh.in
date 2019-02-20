@@ -1,0 +1,4 @@
+IMPACT_AUTH=$(echo -n user:user123 | base64)
+UBIIK_BASE_URL=http://localhost:8080/v1
+UBIIK_AUTH=$(echo -n nokia:nokia123 | base64)
+IMPACT_GROUP=DM.group

@@ -1,4 +1,4 @@
-package backend
+package nokia_impact_dc_backend
 
 import (
 	"encoding/json"
@@ -6,24 +6,32 @@ import (
 	"log"
 )
 
-type Config struct {
-	ImpactUsername string
-	ImpactPassword string
+type ConfigType struct {
 	CallbackUsername string
 	CallbackPassword string
-	CallbackHost string
+	GoogleAuthFile   string
+	ListenPort       string
 }
 
-func ReadConfig() *Config {
+var instance *ConfigType
+
+func InitConfig() *ConfigType {
 	fp, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		log.Fatalln("Reading config file", err)
 	}
-	cfg := Config{}
+	cfg := ConfigType{}
 	err = json.Unmarshal(fp, &cfg)
 	if err != nil {
 		log.Fatalln("Parsing config file", err)
 	}
+	instance = &cfg
 	return &cfg
 
+}
+
+
+
+func Config() *ConfigType {
+	return instance
 }

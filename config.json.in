@@ -1,0 +1,7 @@
+{
+  "CallbackUsername": "nokia",
+  "CallbackPassword": "nokia123",
+  "GoogleAuthFile": "ubiik-auth.json",
+  "ListenPort":     "8080",
+  "ImpactGroup": "DM.somecorp"
+}

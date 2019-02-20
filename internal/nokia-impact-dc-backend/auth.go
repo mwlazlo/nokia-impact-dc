@@ -1,4 +1,4 @@
-package backend
+package nokia_impact_dc_backend
 
 import (
 	"context"
@@ -49,15 +49,15 @@ func verifyToken(token string, r *http.Request) (*Token, error) {
 		fmt.Println("error:", err)
 		return nil, err
 	}
-	fmt.Printf("%q\n", data)
 	cred := strings.Split(string(data), ":")
-	fmt.Println("Token", cred[0], cred[1])
 
-	if cred[0] != config().CallbackUsername && cred[1] != config().CallbackPassword {
-		log.Println("Credential Mismatch", cred[0], "!=", config().CallbackUsername, " ",
-			cred[1], "!=", config().CallbackPassword)
+	if cred[0] != Config().CallbackUsername || cred[1] != Config().CallbackPassword {
+		log.Println("Credential Mismatch", cred[0], "!=", Config().CallbackUsername, " ",
+			cred[1], "!=", Config().CallbackPassword)
 		return nil, errors.New("Credential Mismatch")
 	}
+
+	log.Println("Request authenticated")
 
 	return &Token{
 		cred[0],

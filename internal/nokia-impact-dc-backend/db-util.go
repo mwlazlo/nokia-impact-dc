@@ -1,4 +1,4 @@
-package backend
+package nokia_impact_dc_backend
 
 import (
 	"cloud.google.com/go/firestore"

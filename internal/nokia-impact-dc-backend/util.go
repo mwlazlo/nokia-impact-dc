@@ -1,13 +1,11 @@
-package backend
+package nokia_impact_dc_backend
 
 import (
 	"cloud.google.com/go/firestore"
-	"google.golang.org/appengine"
-	"google.golang.org/appengine/urlfetch"
-	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"reflect"
+	"runtime"
 )
 
 func InternalError(err error) (int, error) {
@@ -35,6 +33,7 @@ func Unauthorized(err error) (int, error) {
 }
 
 func HttpError(w http.ResponseWriter, code int) {
+	log.Printf("HttpError(%d)\n", code)
 	http.Error(w, http.StatusText(code), code)
 }
 
@@ -63,30 +62,6 @@ func DB(r *http.Request) *Database {
 	return NewDatabase(GetFirestoreClient(r))
 }
 
-
-func HttpPut(r *http.Request, url string, rdr io.Reader) string {
-	ctx := appengine.NewContext(r)
-	client := urlfetch.Client(ctx)
-	request, err := http.NewRequest("PUT", url, rdr)
-	request.SetBasicAuth(gConfig.ImpactUsername, gConfig.ImpactPassword)
-	response, err := client.Do(request)
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		defer response.Body.Close()
-		contents, err := ioutil.ReadAll(response.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Println("The calculated length is:", len(string(contents)), "for the url:", url)
-		log.Println("   ", response.StatusCode)
-		hdr := response.Header
-		for key, value := range hdr {
-			log.Println("   ", key, ":", value)
-		}
-		rv := string(contents)
-		log.Println(rv)
-		return rv
-	}
-	return ""
+func GetFunctionName(i interface{}) string {
+	return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }
