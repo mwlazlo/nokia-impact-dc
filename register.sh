@@ -15,7 +15,7 @@ PARAMS+=(--header "Content-Type: application/json" --header "Accept: application
     exit 1
 }
 
-curl() {
+curl_cmd() {
     ${CURLBIN} "${PARAMS[@]}" "$@" | python -m json.tool
 }
 
@@ -41,29 +41,75 @@ json_lifecycle_subscription_request() {
 EOF
 }
 
-echo "Register application URL"
-curl -X PUT -d "$(json_app_register)" https://impact.idc.nokia.com/m2m/applications/registration
+json_resource_subscription_request() {
+    cat <<EOF
+{
+ 'deletionPolicy': 0,
+ 'groupName': '${IMPACT_GROUP}',
+ 'subscriptionType': 'resources',
+ 'resources': [
+EOF
+    first=1
+    for r in $(cat resources.txt); do
+        if [ $first = 1 ]; then
+            first=0
+        else 
+            echo -n ,
+        fi
+        echo "{'resourcePath': '$r'}"
+    done
+    cat <<EOF
+ ]
+}
+EOF
+}
+
+extract_subscription_id() {
+    tee /dev/stderr | 
+        grep subscriptionId | 
+        sed 's/.*subscriptionId": *"//; s/".*//;'
+}
+
+list_subscription_ids() {
+    for type in resources lifecycleEvents; do
+        curl_cmd https://impact.idc.nokia.com/m2m/subscriptions?type=$type |
+             extract_subscription_id
+    done
+}
+
+delete_subscription() {
+    echo "Deleting subscription $1" 
+    curl_cmd -X DELETE https://impact.idc.nokia.com/m2m/subscriptions/$1
+}
+
 
 echo "Clear existing subscriptions"
-curl -X DELETE https://impact.idc.nokia.com/m2m/subscriptions
+for sid in $(list_subscription_ids); do 
+    delete_subscription $sid
+done
 
-echo "Validate existing subscriptions"
-curl https://impact.idc.nokia.com/m2m/subscriptions?type=lifecycleEvents    
+echo "Register application URL"
+curl_cmd -X PUT -d "$(json_app_register)" \
+    https://impact.idc.nokia.com/m2m/applications/registration
+
 
 echo "Register for lifecycle events"
-subscriptionIdBuf=$(mktemp)
-trap "rm -f ${subscriptionIdBuf}" EXIT
-curl -X POST -d "$(json_lifecycle_subscription_request)" https://impact.idc.nokia.com/m2m/subscriptions?type=lifecycleEvents > ${subscriptionIdBuf}
-echo MDFLKMSDFLKM
-cat ${subscriptionIdBuf}
-subscriptionId=$(cat ${subscriptionIdBuf} | python -c "import sys, json; print json.load(sys.stdin)['subscriptionId']")
+lc_subsId=$(curl_cmd -X POST -d "$(json_lifecycle_subscription_request)" \
+    https://impact.idc.nokia.com/m2m/subscriptions?type=lifecycleEvents |
+        extract_subscription_id)
 
-echo "Updating web service with current subscription ID $(cat ${subscriptionIdBuf})"
-./ubiik-backend.sh setLifecycleSubscriptionId "${subscriptionId}"
+echo "Updating web service with current subscription ID ${lc_subsId}"
+./ubiik-backend.sh setLifecycleSubscriptionId "${lc_subsId}"
+
+echo "Register for resource events"
+rs_subsId=$(curl_cmd -X POST -d "$(json_resource_subscription_request)" \
+    https://impact.idc.nokia.com/m2m/subscriptions?type=resources |
+        extract_subscription_id)
+./ubiik-backend.sh setResourceSubscriptionId "${rs_subsId}"
 
 for type in resources lifecycleEvents; do
     echo "Current subscriptions: ${type}"
-    curl https://impact.idc.nokia.com/m2m/subscriptions?type=${type}
+    curl_cmd https://impact.idc.nokia.com/m2m/subscriptions?type=${type}
 done
 
 # vim: set ts=4 sw=4 et

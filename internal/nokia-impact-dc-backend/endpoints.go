@@ -66,7 +66,7 @@ func SetResourceSubEndpoint(w http.ResponseWriter, r *http.Request) (int, error)
 	if err := json.NewDecoder(r.Body).Decode(&upd); err != nil {
 		return BadRequest(err)
 	}
-	log.Println("Updated lifecycle event subscription", upd.Id)
+	log.Println("Updated resource event subscription", upd.Id)
 	gResourceSubscription = upd.Id
 	return OK()
 }

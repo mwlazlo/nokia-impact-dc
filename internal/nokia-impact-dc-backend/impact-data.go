@@ -16,7 +16,7 @@ type impactData struct {
 }
 
 type AbstractDataRecord struct {
-	UpdateType string // registation / deregistration
+	UpdateType string // registation / deregistration, etc
 	SubscriptionID string
 	SerialNumber string
 	IMSI string
@@ -28,8 +28,9 @@ type AbstractDataRecord struct {
 	ArrayValues map[string][]interface{}
 }
 
-func newAbstractDataRecord() *AbstractDataRecord {
+func newAbstractDataRecord(updateType string) *AbstractDataRecord {
 	abs := AbstractDataRecord{}
+	abs.UpdateType = updateType
 	abs.NumberValues = make(map[string]float64)
 	abs.StringValues = make(map[string]string)
 	abs.BooleanValues = make(map[string]bool)
@@ -45,14 +46,25 @@ func ParseImpactJSON(data []byte) []*AbstractDataRecord {
 		log.Fatal("Failed to parse JSON")
 	}
 
-	m := f.Registrations.([]interface{})
-
-	for _, v := range(m) {
-		x := v.(map[string]interface{})
-		abs := newAbstractDataRecord()
-		parseStruct(x, abs)
-		rv = append(rv, abs)
+	process := func(i interface{}, updateType string) {
+		if i != nil {
+			for _, v := range (i.([]interface{})) {
+				x := v.(map[string]interface{})
+				abs := newAbstractDataRecord(updateType)
+				parseStruct(x, abs)
+				rv = append(rv, abs)
+			}
+		}
 	}
+
+	process(f.Registrations, "registrations")
+	process(f.Deregistrations, "deregistrations")
+	process(f.Expirations, "expirations")
+	process(f.Reports, "reports")
+	process(f.Responses, "responses")
+	process(f.Updates, "updates")
+
+
 	return rv
 }
 
