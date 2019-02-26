@@ -50,7 +50,7 @@ json_resource_subscription_request() {
  'resources': [
 EOF
     first=1
-    for r in $(cat resources.txt); do
+    for r in $(cat resources.txt | egrep -v '^\s*#|^\s*$'); do 
         if [ $first = 1 ]; then
             first=0
         else 
@@ -98,14 +98,15 @@ lc_subsId=$(curl_cmd -X POST -d "$(json_lifecycle_subscription_request)" \
     https://impact.idc.nokia.com/m2m/subscriptions?type=lifecycleEvents |
         extract_subscription_id)
 
-echo "Updating web service with current subscription ID ${lc_subsId}"
-./ubiik-backend.sh setLifecycleSubscriptionId "${lc_subsId}"
+# SUBSC (see comment in backend.go)
+#echo "Updating web service with current subscription ID ${lc_subsId}"
+#./ubiik-backend.sh setLifecycleSubscriptionId "${lc_subsId}"
 
 echo "Register for resource events"
 rs_subsId=$(curl_cmd -X POST -d "$(json_resource_subscription_request)" \
     https://impact.idc.nokia.com/m2m/subscriptions?type=resources |
         extract_subscription_id)
-./ubiik-backend.sh setResourceSubscriptionId "${rs_subsId}"
+#./ubiik-backend.sh setResourceSubscriptionId "${rs_subsId}"
 
 for type in resources lifecycleEvents; do
     echo "Current subscriptions: ${type}"

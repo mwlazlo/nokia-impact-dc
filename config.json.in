@@ -1,7 +1,10 @@
 {
   "CallbackUsername": "nokia",
   "CallbackPassword": "nokia123",
+  "ImpactUsername": "mycorp",
+  "ImpactPassword": "MyC0rp123",
+  "ImpactBaseURL": "https://impact.idc.nokia.com",
+  "ImpactGroup": "DM.mycorp",
   "GoogleAuthFile": "ubiik-auth.json",
-  "ListenPort":     "8080",
-  "ImpactGroup": "DM.somecorp"
+  "ListenPort":     "8080"
 }

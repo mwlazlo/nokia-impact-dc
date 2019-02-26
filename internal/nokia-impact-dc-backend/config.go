@@ -9,13 +9,15 @@ import (
 type ConfigType struct {
 	CallbackUsername string
 	CallbackPassword string
+	ImpactUsername   string
+	ImpactPassword   string
+	ImpactBaseURL    string
+	ImpactGroup      string
 	GoogleAuthFile   string
 	ListenPort       string
 }
 
-var instance *ConfigType
-
-func InitConfig() *ConfigType {
+func LoadConfig() *ConfigType {
 	fp, err := ioutil.ReadFile("config.json")
 	if err != nil {
 		log.Fatalln("Reading config file", err)
@@ -25,11 +27,5 @@ func InitConfig() *ConfigType {
 	if err != nil {
 		log.Fatalln("Parsing config file", err)
 	}
-	instance = &cfg
 	return &cfg
-
-}
-
-func Config() *ConfigType {
-	return instance
 }

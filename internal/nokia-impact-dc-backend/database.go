@@ -12,20 +12,14 @@ type Database struct {
 	displayNameCache map[string]string
 }
 
-func (d *Database) log(request *http.Request, s string) {
-	// TODO
-	//d.client.Collection("logs").Doc(request.Tim)
-}
-
 func (d *Database) saveData(r *http.Request, record *AbstractDataRecord) error {
-	client := GetFirestoreClient(r)
 	docId := fmt.Sprintf("%d", record.Timestamp)
 	if record.SerialNumber != "" {
 		ctx := context.Background()
 		recordTyp := struct {
 			RecordType string `firestore:"recordType"`
 		}{record.UpdateType}
-		docRef := client.Collection("clients").Doc(record.SerialNumber).Collection("history").Doc(docId)
+		docRef := d.client.Collection("clients").Doc(record.SerialNumber).Collection("history").Doc(docId)
 		if _, err := docRef.Set(ctx, recordTyp); err != nil {
 			return err
 		}
