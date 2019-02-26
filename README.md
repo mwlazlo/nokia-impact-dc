@@ -14,7 +14,7 @@ echo output should be: lwm2mclient: ELF 64-bit LSB shared object, x86-64, versio
 ## Step 2: Setup google cloud 
 - Create a new project: https://console.cloud.google.com
 - Install SDK: https://cloud.google.com/sdk/install
-- Download service account private key: https://console.firebase.google.com/u/0/project/{{YOUR PROJECT ID}}/settings/serviceaccounts/adminsdk
+- Download service account private key: https://console.firebase.google.com/u/0/project/{{YOUR-PROJECT-ID}}/settings/serviceaccounts/adminsdk
 - Setup the SDK:
 `gcloud init`
 
