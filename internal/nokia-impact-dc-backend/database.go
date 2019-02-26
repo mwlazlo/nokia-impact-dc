@@ -24,7 +24,7 @@ func (d *Database) saveData(r *http.Request, record *AbstractDataRecord) error {
 		ctx := context.Background()
 		recordTyp := struct {
 			RecordType string `firestore:"recordType"`
-		}{ record.UpdateType}
+		}{record.UpdateType}
 		docRef := client.Collection("clients").Doc(record.SerialNumber).Collection("history").Doc(docId)
 		if _, err := docRef.Set(ctx, recordTyp); err != nil {
 			return err
@@ -47,9 +47,7 @@ func (d *Database) saveData(r *http.Request, record *AbstractDataRecord) error {
 
 func NewDatabase(cli *firestore.Client) *Database {
 	return &Database{
-		client: cli,
+		client:           cli,
 		displayNameCache: make(map[string]string),
 	}
 }
-
-

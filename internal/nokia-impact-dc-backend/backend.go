@@ -11,15 +11,11 @@ import (
 	"net/http"
 )
 
-
-
 // like a regular handler but with return codes
 type VmeHandlerFunc func(http.ResponseWriter, *http.Request) (int, error)
 type VmeHandler struct {
 	Handler VmeHandlerFunc
 }
-
-
 
 // wrap an http handler. The main reason is to ensure the request is authenticated.
 func (ah VmeHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -106,7 +102,6 @@ func InitialiseBackend() {
 	v1Router.Handle("/callback", VmeHandler{CallbackEndpoint}).Methods("POST")
 	v1Router.Handle("/setLifecycleSubscription", VmeHandler{SetLifecycleSubEndpoint}).Methods("POST")
 	v1Router.Handle("/setResourceSubscription", VmeHandler{SetResourceSubEndpoint}).Methods("POST")
-
 
 	http.Handle("/", router)
 

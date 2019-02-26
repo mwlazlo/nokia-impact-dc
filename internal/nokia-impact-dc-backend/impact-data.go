@@ -7,25 +7,25 @@ import (
 )
 
 type impactData struct {
-	Reports interface{}			`json:"reports"`
-	Registrations interface{} `json:"registrations"`
+	Reports         interface{} `json:"reports"`
+	Registrations   interface{} `json:"registrations"`
 	Deregistrations interface{} `json:"deregistrations"`
-	Updates interface{} `json:"updated"`
-	Expirations interface{} `json:"expirations"`
-	Responses interface{} `json:"responses"`
+	Updates         interface{} `json:"updated"`
+	Expirations     interface{} `json:"expirations"`
+	Responses       interface{} `json:"responses"`
 }
 
 type AbstractDataRecord struct {
-	UpdateType string // registation / deregistration, etc
+	UpdateType     string // registation / deregistration, etc
 	SubscriptionID string
-	SerialNumber string
-	IMSI string
-	Timestamp int64
+	SerialNumber   string
+	IMSI           string
+	Timestamp      int64
 
-	NumberValues map[string]float64
-	StringValues map[string]string
+	NumberValues  map[string]float64
+	StringValues  map[string]string
 	BooleanValues map[string]bool
-	ArrayValues map[string][]interface{}
+	ArrayValues   map[string][]interface{}
 }
 
 func newAbstractDataRecord(updateType string) *AbstractDataRecord {
@@ -63,7 +63,6 @@ func ParseImpactJSON(data []byte) []*AbstractDataRecord {
 	process(f.Reports, "reports")
 	process(f.Responses, "responses")
 	process(f.Updates, "updates")
-
 
 	return rv
 }

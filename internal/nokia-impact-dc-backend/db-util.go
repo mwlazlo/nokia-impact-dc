@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func safeExtractString(doc *firestore.DocumentSnapshot, key string, dflt string) (string) {
+func safeExtractString(doc *firestore.DocumentSnapshot, key string, dflt string) string {
 	if value, ok := doc.Data()[key]; !ok {
 		log.Printf("Key '%s' not found in document %s\n", key, doc.Ref.Path)
 		return dflt
@@ -21,7 +21,7 @@ func safeExtractString(doc *firestore.DocumentSnapshot, key string, dflt string)
 	}
 }
 
-func safeExtractBool(doc *firestore.DocumentSnapshot, key string, dflt bool) (bool) {
+func safeExtractBool(doc *firestore.DocumentSnapshot, key string, dflt bool) bool {
 	if value, ok := doc.Data()[key]; !ok {
 		log.Printf("Key '%s' not found in document %s\n", key, doc.Ref.Path)
 		return dflt

@@ -30,8 +30,6 @@ func InitConfig() *ConfigType {
 
 }
 
-
-
 func Config() *ConfigType {
 	return instance
 }

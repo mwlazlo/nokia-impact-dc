@@ -11,7 +11,7 @@ import (
 )
 
 type Token struct {
-	Id string
+	Id     string
 	Passwd string
 }
 
@@ -42,7 +42,6 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-
 func verifyToken(token string, r *http.Request) (*Token, error) {
 	data, err := base64.StdEncoding.DecodeString(token)
 	if err != nil {
@@ -64,5 +63,3 @@ func verifyToken(token string, r *http.Request) (*Token, error) {
 		cred[1],
 	}, nil
 }
-
-
