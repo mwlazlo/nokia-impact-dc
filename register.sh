@@ -92,21 +92,15 @@ echo "Register application URL"
 curl_cmd -X PUT -d "$(json_app_register)" \
     https://impact.idc.nokia.com/m2m/applications/registration
 
-
 echo "Register for lifecycle events"
-lc_subsId=$(curl_cmd -X POST -d "$(json_lifecycle_subscription_request)" \
+curl_cmd -X POST -d "$(json_lifecycle_subscription_request)" \
     https://impact.idc.nokia.com/m2m/subscriptions?type=lifecycleEvents |
-        extract_subscription_id)
-
-# SUBSC (see comment in backend.go)
-#echo "Updating web service with current subscription ID ${lc_subsId}"
-#./ubiik-backend.sh setLifecycleSubscriptionId "${lc_subsId}"
+        extract_subscription_id
 
 echo "Register for resource events"
-rs_subsId=$(curl_cmd -X POST -d "$(json_resource_subscription_request)" \
+curl_cmd -X POST -d "$(json_resource_subscription_request)" \
     https://impact.idc.nokia.com/m2m/subscriptions?type=resources |
-        extract_subscription_id)
-#./ubiik-backend.sh setResourceSubscriptionId "${rs_subsId}"
+        extract_subscription_id
 
 for type in resources lifecycleEvents; do
     echo "Current subscriptions: ${type}"
