@@ -23,6 +23,9 @@ func (d *Database) saveData(r *http.Request, record *AbstractDataRecord) error {
 		if _, err := docRef.Set(ctx, recordTyp); err != nil {
 			return err
 		}
+		if _, err := docRef.Set(ctx, record.ByteValues, firestore.MergeAll); err != nil {
+			return err
+		}
 		if _, err := docRef.Set(ctx, record.StringValues, firestore.MergeAll); err != nil {
 			return err
 		}
