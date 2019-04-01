@@ -22,6 +22,7 @@ type AbstractDataRecord struct {
 	IMSI           string
 	Timestamp      int64
 
+	ByteValues    map[string][]byte
 	NumberValues  map[string]float64
 	StringValues  map[string]string
 	BooleanValues map[string]bool

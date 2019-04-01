@@ -28,11 +28,11 @@ cat > config.json <<EOF
 { 
   "CallbackUsername": "nokia",
   "CallbackPassword": "Nokia@20190218",
-  "ImpactUsername": "Ubiik.TH",
-  "ImpactPassword": "Ubiik@19",
+  "ImpactUsername": "mycorp",
+  "ImpactPassword": "mycorp123",
   "ImpactBaseURL": "https://impact.idc.nokia.com",
-  "ImpactGroup": "APJ.JAPAN.Rakuten",
-  "GoogleAuthFile": "ubiik-auth.json",
+  "ImpactGroup": "MY.CORP"
+  "GoogleAuthFile": "mycorp-auth.json",
   "ListenPort": "8080"
 }
 EOF
